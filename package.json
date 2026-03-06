@@ -1,0 +1,34 @@
+{
+  "name": "moody",
+  "version": "1.0.0",
+  "description": "Smart Teleprompter Desktop App — notch-anchored overlay for natural eye contact",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac",
+    "dev": "electron . --dev"
+  },
+  "author": "Solal Berrebi",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0",
+    "uuid": "^11.0.0"
+  },
+  "build": {
+    "appId": "com.moody.teleprompter",
+    "productName": "Moody",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg"
+      ]
+    },
+    "files": [
+      "src/**/*"
+    ]
+  }
+}
