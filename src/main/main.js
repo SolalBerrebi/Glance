@@ -1,11 +1,56 @@
-const { app, BrowserWindow, screen, ipcMain, globalShortcut, Tray, Menu, nativeImage } = require('electron');
+const { app, BrowserWindow, screen, ipcMain, globalShortcut, session, Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
 const Store = require('electron-store');
 
 const store = new Store({
   defaults: {
-    scripts: [],
-    activeScriptId: null,
+    scripts: [
+      {
+        id: 'welcome-glance',
+        title: 'Welcome to Glance',
+        content: `Welcome to Glance
+
+Your smart teleprompter that follows your voice naturally.
+
+Right now you are reading this text on the prompter.
+If Voice Follow is enabled, each word highlights as you speak, tracking exactly where you are.
+
+Try pausing for a moment.
+Notice how it waits for you.
+
+Now try reading a bit faster and watch the prompter keep up with your pace.
+
+You can even go back.
+Try re-reading the previous sentence again.
+The prompter followed you back.
+
+Getting Started
+
+Write or paste your script in the editor on the left.
+Click Start to launch the prompter with a countdown.
+Enable Voice Follow for hands-free scrolling.
+You will need a free Groq API key from console.groq.com.
+
+Tips for Best Results
+
+Speak clearly at a natural pace.
+A quiet environment works best.
+You can resize and drag the prompter window anywhere on screen.
+
+Keyboard Shortcuts
+
+Ctrl P or Command P to play or pause.
+Ctrl R or Command R to reset to the beginning.
+Arrow keys to adjust scroll speed.
+Ctrl Shift P or Command Shift P to toggle the prompter window.
+
+That is everything you need to know.
+Delete this script and create your first one.
+
+Happy presenting.`
+      }
+    ],
+    activeScriptId: 'welcome-glance',
     settings: {
       fontSize: 32,
       textColor: '#FFFFFF',
@@ -15,7 +60,9 @@ const store = new Store({
       mirror: false,
       padding: 20,
       scrollSpeed: 1.0,
-      countdownDuration: 3
+      countdownDuration: 3,
+      voiceFollow: false,
+      groqApiKey: ''
     },
     prompterBounds: null,
     mainBounds: null
@@ -45,8 +92,8 @@ function createMainWindow() {
     y: savedBounds?.y,
     minWidth: 600,
     minHeight: 400,
-    title: 'Moody',
-    titleBarStyle: 'hiddenInset',
+    title: 'Glance',
+    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     backgroundColor: '#1a1a1a',
     webPreferences: {
       preload: path.join(__dirname, '..', 'shared', 'preload.js'),
@@ -98,6 +145,7 @@ function createPrompterWindow() {
     }
   });
 
+  prompterWindow.setContentProtection(true);
   prompterWindow.setAlwaysOnTop(true, 'floating');
   prompterWindow.setVisibleOnAllWorkspaces(true);
   prompterWindow.loadFile(path.join(__dirname, '..', 'renderer', 'prompter', 'index.html'));
@@ -195,6 +243,15 @@ ipcMain.handle('notify-main', (_, data) => {
 });
 
 app.whenReady().then(() => {
+  // Allow microphone access for voice follow feature
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'media') {
+      callback(true);
+      return;
+    }
+    callback(true);
+  });
+
   createMainWindow();
   registerShortcuts();
 });

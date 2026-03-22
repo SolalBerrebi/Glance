@@ -312,7 +312,8 @@ select {
   transition: all 0.15s;
 }
 
-.btn-accent:hover {
+.btn-accent:hover,
+.btn-accent.active {
   background: var(--accent);
   color: #fff;
 }
@@ -379,6 +380,38 @@ select {
 .color-swatch:hover,
 .color-swatch.active {
   border-color: var(--accent);
+}
+
+.setting-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  outline: none;
+  width: 150px;
+}
+
+.setting-input:focus {
+  border-color: var(--accent);
+}
+
+.setting-input::placeholder {
+  color: var(--text-dim);
+  font-size: 10px;
+}
+
+.setting-divider {
+  border-top: 1px solid var(--border);
+  margin: 8px 0;
+}
+
+.setting-hint {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: -6px;
+  margin-bottom: 4px;
 }
 
 input[type="color"] {

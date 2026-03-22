@@ -21,7 +21,7 @@ html, body {
   background: rgba(0, 0, 0, 0.85);
 }
 
-/* Drag handle — thin bar at top */
+/* Drag handle */
 .drag-handle {
   position: absolute;
   top: 0;
@@ -114,17 +114,18 @@ html, body {
   transition: transform 0s linear;
 }
 
+/* Line styles (non-voice scroll mode) */
 .scroll-content .line {
   color: #FFFFFF;
   font-size: 32px;
   font-weight: bold;
   line-height: 1.6;
-  transition: opacity 0.3s;
+  transition: opacity 0.4s ease;
   margin-bottom: 4px;
 }
 
 .scroll-content .line.read {
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 .scroll-content .line.current {
@@ -135,14 +136,33 @@ html, body {
   opacity: 0.6;
 }
 
-/* Gradient overlays */
+/* Word-level styles (voice follow mode) */
+.word {
+  display: inline;
+  transition: opacity 0.5s ease;
+}
+
+.word.word-read {
+  opacity: 0.2;
+}
+
+.word.word-active {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}
+
+.word.word-upcoming {
+  opacity: 0.75;
+}
+
+/* Gradient overlays — symmetric around center focus point */
 .gradient-top {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 30px;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+  height: 35%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
   z-index: 5;
   pointer-events: none;
 }
@@ -152,8 +172,8 @@ html, body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 30px;
-  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+  height: 35%;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
   z-index: 5;
   pointer-events: none;
 }
@@ -161,6 +181,59 @@ html, body {
 /* Mirror mode */
 .mirror .scroll-content {
   transform: scaleX(-1);
+}
+
+/* Voice follow indicator */
+.voice-indicator {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.voice-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4CAF50;
+  animation: voicePulse 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.voice-label {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  user-select: none;
+}
+
+.voice-indicator.matching .voice-dot {
+  background: #4CAF50;
+  box-shadow: 0 0 6px #4CAF50;
+}
+
+.voice-indicator.matching .voice-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.voice-indicator.silent .voice-dot {
+  background: #FF9800;
+  animation: none;
+  opacity: 0.7;
+}
+
+.voice-indicator.silent .voice-label {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+@keyframes voicePulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
 }
 
 /* Scrollbar hidden */

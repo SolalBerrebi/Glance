@@ -32,6 +32,9 @@ const fontWeightSelect = document.getElementById('font-weight-select');
 const countdownSelect = document.getElementById('countdown-select');
 const customColor = document.getElementById('custom-color');
 
+const btnVoiceFollow = document.getElementById('btn-voice-follow');
+const groqApiKeyInput = document.getElementById('groq-api-key');
+
 // Init
 async function init() {
   scripts = await window.api.getScripts();
@@ -56,6 +59,8 @@ function applySettingsToUI() {
   paddingLabel.textContent = settings.padding + 'px';
   countdownSelect.value = settings.countdownDuration;
   document.getElementById('btn-mirror').textContent = settings.mirror ? 'On' : 'Off';
+  btnVoiceFollow.classList.toggle('active', !!settings.voiceFollow);
+  groqApiKeyInput.value = settings.groqApiKey || '';
 
   // Color swatches
   document.querySelectorAll('.color-swatch').forEach(s => {
@@ -286,6 +291,26 @@ paddingSlider.addEventListener('input', () => {
   saveAndSync();
 });
 
+// Voice Follow toggle
+btnVoiceFollow.addEventListener('click', () => {
+  if (!settings.groqApiKey && !settings.voiceFollow) {
+    // No API key — open settings and focus the input
+    settingsPanel.style.display = 'block';
+    document.getElementById('btn-settings-toggle').classList.add('active');
+    groqApiKeyInput.focus();
+    return;
+  }
+  settings.voiceFollow = !settings.voiceFollow;
+  btnVoiceFollow.classList.toggle('active', settings.voiceFollow);
+  window.api.saveSettings(settings);
+});
+
+// Groq API Key
+groqApiKeyInput.addEventListener('change', () => {
+  settings.groqApiKey = groqApiKeyInput.value.trim();
+  window.api.saveSettings(settings);
+});
+
 // Settings: mirror
 document.getElementById('btn-mirror').addEventListener('click', () => {
   settings.mirror = !settings.mirror;
@@ -296,42 +321,42 @@ document.getElementById('btn-mirror').addEventListener('click', () => {
 // Keyboard shortcuts (local to main window)
 document.addEventListener('keydown', (e) => {
   // Cmd+= / Cmd+- for font size
-  if (e.metaKey && e.key === '=') {
+  if ((e.metaKey || e.ctrlKey) && e.key === '=') {
     e.preventDefault();
     settings.fontSize = Math.min(72, settings.fontSize + 2);
     fontSizeLabel.textContent = settings.fontSize + 'px';
     saveAndSync();
   }
-  if (e.metaKey && e.key === '-') {
+  if ((e.metaKey || e.ctrlKey) && e.key === '-') {
     e.preventDefault();
     settings.fontSize = Math.max(16, settings.fontSize - 2);
     fontSizeLabel.textContent = settings.fontSize + 'px';
     saveAndSync();
   }
   // Cmd+M for mirror
-  if (e.metaKey && e.key === 'm') {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'm') {
     e.preventDefault();
     settings.mirror = !settings.mirror;
     document.getElementById('btn-mirror').textContent = settings.mirror ? 'On' : 'Off';
     saveAndSync();
   }
   // Cmd+Enter for start with countdown
-  if (e.metaKey && e.key === 'Enter') {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
     e.preventDefault();
     document.getElementById('btn-start').click();
   }
   // Cmd+R for reset
-  if (e.metaKey && e.key === 'r') {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'r') {
     e.preventDefault();
     window.api.prompterControl({ type: 'reset' });
   }
   // Cmd+P for play/pause
-  if (e.metaKey && !e.shiftKey && e.key === 'p') {
+  if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'p') {
     e.preventDefault();
     window.api.prompterControl({ type: 'toggle' });
   }
   // Cmd+] speed up, Cmd+[ speed down
-  if (e.metaKey && e.key === ']') {
+  if ((e.metaKey || e.ctrlKey) && e.key === ']') {
     e.preventDefault();
     settings.scrollSpeed = Math.min(5, +(settings.scrollSpeed + 0.1).toFixed(1));
     speedSlider.value = settings.scrollSpeed;
@@ -339,7 +364,7 @@ document.addEventListener('keydown', (e) => {
     window.api.saveSettings(settings);
     window.api.prompterControl({ type: 'speed', value: settings.scrollSpeed });
   }
-  if (e.metaKey && e.key === '[') {
+  if ((e.metaKey || e.ctrlKey) && e.key === '[') {
     e.preventDefault();
     settings.scrollSpeed = Math.max(0.1, +(settings.scrollSpeed - 0.1).toFixed(1));
     speedSlider.value = settings.scrollSpeed;

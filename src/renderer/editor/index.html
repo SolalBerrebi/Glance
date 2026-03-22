@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moody</title>
+  <title>Glance</title>
   <link rel="stylesheet" href="editor.css">
 </head>
 <body>
   <div class="titlebar">
     <div class="titlebar-drag">
-      <span class="app-name">Moody</span>
+      <span class="app-name">Glance</span>
     </div>
     <div class="titlebar-actions">
       <button id="btn-prompter" class="btn-icon" title="Toggle Prompter (Cmd+Shift+P)">
@@ -67,6 +67,9 @@
         </select>
       </div>
       <div class="control-group">
+        <button id="btn-voice-follow" class="btn-accent" title="Auto-scroll based on voice recognition">Voice Follow</button>
+      </div>
+      <div class="control-group">
         <button id="btn-reset-notch" class="btn-accent">Reset to Notch</button>
       </div>
       <div class="control-group">
@@ -114,6 +117,12 @@
       <label>Mirror Mode</label>
       <button id="btn-mirror" class="btn-small">Off</button>
     </div>
+    <div class="setting-divider"></div>
+    <div class="setting-row">
+      <label>Groq API Key</label>
+      <input type="password" id="groq-api-key" class="setting-input" placeholder="Free at console.groq.com" />
+    </div>
+    <div class="setting-hint">Free key for Voice Follow. Get one at console.groq.com</div>
   </div>
 
   <script src="editor.js"></script>

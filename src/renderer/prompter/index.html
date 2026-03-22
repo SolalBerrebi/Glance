@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moody Prompter</title>
+  <title>Glance Prompter</title>
   <link rel="stylesheet" href="prompter.css">
 </head>
 <body>
@@ -30,6 +30,12 @@
     <!-- Scroll content -->
     <div class="scroll-wrapper" id="scroll-wrapper">
       <div class="scroll-content" id="scroll-content"></div>
+    </div>
+
+    <!-- Voice follow indicator -->
+    <div class="voice-indicator" id="voice-indicator" style="display:none;">
+      <div class="voice-dot"></div>
+      <span class="voice-label" id="voice-label">Listening</span>
     </div>
 
     <!-- Gradient overlays -->

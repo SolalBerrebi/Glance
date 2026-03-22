@@ -1,11 +1,13 @@
 {
-  "name": "moody",
+  "name": "glance",
   "version": "1.0.0",
-  "description": "Smart Teleprompter Desktop App — notch-anchored overlay for natural eye contact",
+  "description": "Glance — Smart Teleprompter that follows your voice for natural eye contact",
   "main": "src/main/main.js",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:all": "electron-builder --mac --win",
     "dev": "electron . --dev"
   },
   "author": "Solal Berrebi",
@@ -19,13 +21,22 @@
     "uuid": "^11.0.0"
   },
   "build": {
-    "appId": "com.moody.teleprompter",
-    "productName": "Moody",
+    "appId": "com.glance.teleprompter",
+    "productName": "Glance",
     "mac": {
       "category": "public.app-category.productivity",
       "target": [
         "dmg"
       ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false
     },
     "files": [
       "src/**/*"
